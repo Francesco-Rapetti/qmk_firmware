@@ -681,6 +681,17 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
             }
             return false;
 
+        case LAYER_THREE:
+            if (record->event.pressed) {
+                // when keycode LAYER_THREE is pressed
+                rgb_matrix_set_color(0, RGB_RED);
+                rgb_matrix_set_color(73, RGB_RED);
+                SEND_STRING("Switched to Layer 3");
+            } else {
+                // when keycode LAYER_THREE is released
+            }
+            return false;
+
         default:
             return true;
     }
