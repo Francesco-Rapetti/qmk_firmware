@@ -48,7 +48,7 @@ enum custom_keycodes {
     BAT_NUM,
     RGB_TEST,
 
-    LAYER_THREE = TG(3), // edited
+    LAYER_THREE, // edited
 };
 
 typedef enum {
