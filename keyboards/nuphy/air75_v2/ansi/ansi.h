@@ -48,7 +48,15 @@ enum custom_keycodes {
     BAT_NUM,
     RGB_TEST,
 
-    LAYER_THREE, // edited
+    // windows shortcuts
+    WIN_TASK = SAFE_RANGE,
+    WIN_SEARCH, // only with powertoys installed
+    WIN_VOICE,
+    WIN_DND,
+    WIN_CONSOLE,
+
+    // print current layer
+    DEBUG_LAYER,
 };
 
 typedef enum {
