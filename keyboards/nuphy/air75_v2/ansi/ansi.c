@@ -165,7 +165,7 @@ void long_press_key(void) {
                 default_layer_set(1 << 0);
                 keymap_config.nkro = 0;
             } else {
-                default_layer_set(1 << 2);
+                default_layer_set(1 << 4);
                 keymap_config.nkro = 1;
             }
         }
@@ -302,7 +302,7 @@ void dial_sw_scan(void) {
     } else {
         if (dev_info.sys_sw_state != SYS_SW_WIN) {
             f_sys_show = 1;
-            default_layer_set(1 << 2);
+            default_layer_set(1 << 4);
             dev_info.sys_sw_state = SYS_SW_WIN;
             keymap_config.nkro    = 1;
             break_all_key();
@@ -372,7 +372,7 @@ void dial_sw_fast_scan(void) {
     } else {
         if (dev_info.sys_sw_state != SYS_SW_WIN) {
             //f_sys_show = 1;
-            default_layer_set(1 << 2);
+            default_layer_set(1 << 4);
             dev_info.sys_sw_state = SYS_SW_WIN;
             keymap_config.nkro    = 1;
             break_all_key();
@@ -473,7 +473,11 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
         case LNK_BLE1:
             if (record->event.pressed) {
                 if (dev_info.link_mode != LINK_USB) {
-                    rf_sw_temp    = LINK_BT_1;
+                    if (dev_info.link_mode == LINK_BT_1) {
+                        rf_sw_temp = LINK_RF_24;
+                    } else {
+                        rf_sw_temp = LINK_BT_1;
+                    }
                     f_rf_sw_press = 1;
                     break_all_key();
                 }
@@ -492,7 +496,11 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
         case LNK_BLE2:
             if (record->event.pressed) {
                 if (dev_info.link_mode != LINK_USB) {
-                    rf_sw_temp    = LINK_BT_2;
+                    if (dev_info.link_mode == LINK_BT_2) {
+                        rf_sw_temp = LINK_RF_24;
+                    } else {
+                        rf_sw_temp = LINK_BT_2;
+                    }
                     f_rf_sw_press = 1;
                     break_all_key();
                 }
@@ -511,7 +519,11 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
         case LNK_BLE3:
             if (record->event.pressed) {
                 if (dev_info.link_mode != LINK_USB) {
-                    rf_sw_temp    = LINK_BT_3;
+                    if (dev_info.link_mode == LINK_BT_3) {
+                        rf_sw_temp = LINK_RF_24;
+                    } else {
+                        rf_sw_temp = LINK_BT_3;
+                    }
                     f_rf_sw_press = 1;
                     break_all_key();
                 }
@@ -681,16 +693,62 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
             }
             return false;
 
-        // case LAYER_THREE:
-        //     if (record->event.pressed) {
-        //         // when keycode LAYER_THREE is pressed
-        //         rgb_matrix_set_color(0, RGB_RED);
-        //         rgb_matrix_set_color(73, RGB_RED);
-        //         SEND_STRING("Switched to Layer 3");
-        //     } else {
-        //         // when keycode LAYER_THREE is released
-        //     }
-        //     return false;
+        case WIN_TASK:
+            if (record->event.pressed) {
+                // when keycode is pressed
+                SEND_STRING(SS_DOWN(X_LGUI) SS_TAP(X_TAB) SS_UP(X_LGUI));
+            } else {
+                // when keycode is released
+            }
+            return false;
+
+        case WIN_SEARCH:
+            if (record->event.pressed) {
+                // when keycode is pressed
+
+            } else {
+                // when keycode is released
+            }
+            return false;
+
+        case WIN_VOICE:
+            if (record->event.pressed) {
+                // when keycode is pressed
+
+            } else {
+                // when keycode is released
+            }
+            return false;
+
+        case WIN_DND:
+            if (record->event.pressed) {
+                // when keycode is pressed
+
+            } else {
+                // when keycode is released
+            }
+            return false;
+
+        case WIN_CONSOLE:
+            if (record->event.pressed) {
+                // when keycode is pressed
+
+            } else {
+                // when keycode is released
+            }
+            return false;
+
+        case DEBUG_LAYER:
+            if (record->event.pressed) {
+                // when keycode is pressed
+                char str[20];
+                int number = get_highest_layer(layer_state|default_layer_state);
+                sprintf(str, "LAYER: %d", number);
+                SEND_STRING(str);
+            } else {
+                // when keycode is released
+            }
+            return false;
 
         default:
             return true;
@@ -705,21 +763,149 @@ bool rgb_matrix_indicators_user(void)
     }
     rgb_matrix_set_color(RGB_MATRIX_LED_COUNT-1, 0, 0, 0);
 
+    // set rgb color according to the current layer
     switch(get_highest_layer(layer_state|default_layer_state)) {
-            case 0:
-                rgb_matrix_set_color(73, 0, 0, 0);
+        // layer 1 Mac
+        case 0:
+            rgb_matrix_set_color(73, 0, 0, 0);      // layer TG
+            break;
+        // layer 1 Mac fn
+        case 1:
+            rgb_matrix_set_color(73, RGB_WHITE);    // layer TG
+            rgb_matrix_set_color(44, RGB_YELLOW);   // show battery
+            rgb_matrix_set_color(43, RGB_YELLOW);   // sleep mode
+            rgb_matrix_set_color(42, RGB_YELLOW);   // dev reset
+            rgb_matrix_set_color(63, RGB_YELLOW);   // rgb test
+            rgb_matrix_set_color(65, RGB_YELLOW);   // show battery percentage
+            rgb_matrix_set_color(67, RGB_YELLOW);   // layer extra
+            rgb_matrix_set_color(68, RGB_RED);      // rgb speed down
+            rgb_matrix_set_color(69, RGB_GREEN);    // rgb speed up
+            rgb_matrix_set_color(72, RGB_GREEN);    // rgb light up
+            rgb_matrix_set_color(75, RGB_RED);      // rgb light down
+            rgb_matrix_set_color(74, RGB_YELLOW);   // rgb hui
+            rgb_matrix_set_color(76, RGB_YELLOW);   // rgb mode
+            if (dev_info.link_mode != LINK_USB && f_bat_num_show == 0) {
+                rgb_matrix_set_color(26, RGB_GREEN);    // RF
+                rgb_matrix_set_color(27, RGB_BLUE);     // BLE3
+                rgb_matrix_set_color(28, RGB_BLUE);     // BLE2
+                rgb_matrix_set_color(29, RGB_BLUE);     // BLE1
+            }
+            break;
+        // layer 2 Mac
+        case 2:
+            rgb_matrix_set_color(73, RGB_WHITE);    // layer TG
+            break;
+        // layer 2 Mac fn
+        case 3:
+            rgb_matrix_set_color(73, RGB_WHITE);    // layer TG
+            rgb_matrix_set_color(44, RGB_YELLOW);   // show battery
+            rgb_matrix_set_color(43, RGB_YELLOW);   // sleep mode
+            rgb_matrix_set_color(42, RGB_YELLOW);   // dev reset
+            rgb_matrix_set_color(63, RGB_YELLOW);   // rgb test
+            rgb_matrix_set_color(65, RGB_YELLOW);   // show battery percentage
+            rgb_matrix_set_color(67, RGB_YELLOW);   // layer extra
+            rgb_matrix_set_color(68, RGB_RED);      // rgb speed down
+            rgb_matrix_set_color(69, RGB_GREEN);    // rgb speed up
+            rgb_matrix_set_color(72, RGB_GREEN);    // rgb light up
+            rgb_matrix_set_color(75, RGB_RED);      // rgb light down
+            rgb_matrix_set_color(74, RGB_YELLOW);   // rgb hui
+            rgb_matrix_set_color(76, RGB_YELLOW);   // rgb mode
+            if (dev_info.link_mode != LINK_USB && f_bat_num_show == 0) {
+                rgb_matrix_set_color(26, RGB_GREEN);    // RF
+                rgb_matrix_set_color(27, RGB_BLUE);     // BLE3
+                rgb_matrix_set_color(28, RGB_BLUE);     // BLE2
+                rgb_matrix_set_color(29, RGB_BLUE);     // BLE1
+            }
+            break;
+        // layer 1 Win
+        case 4:
+            rgb_matrix_set_color(73, 0, 0, 0);      // layer TG
+            break;
+        // layer 1 Win fn
+        case 5:
+            rgb_matrix_set_color(73, RGB_WHITE);    // layer TG
+            rgb_matrix_set_color(44, RGB_YELLOW);   // show battery
+            rgb_matrix_set_color(43, RGB_YELLOW);   // sleep mode
+            rgb_matrix_set_color(42, RGB_YELLOW);   // dev reset
+            rgb_matrix_set_color(63, RGB_YELLOW);   // rgb test
+            rgb_matrix_set_color(65, RGB_YELLOW);   // show battery percentage
+            rgb_matrix_set_color(67, RGB_YELLOW);   // layer extra
+            rgb_matrix_set_color(68, RGB_RED);      // rgb speed down
+            rgb_matrix_set_color(69, RGB_GREEN);    // rgb speed up
+            rgb_matrix_set_color(72, RGB_GREEN);    // rgb light up
+            rgb_matrix_set_color(75, RGB_RED);      // rgb light down
+            rgb_matrix_set_color(74, RGB_YELLOW);   // rgb hui
+            rgb_matrix_set_color(76, RGB_YELLOW);   // rgb mode
+            if (dev_info.link_mode != LINK_USB && f_bat_num_show == 0) {
+                rgb_matrix_set_color(26, RGB_GREEN);    // RF
+                rgb_matrix_set_color(27, RGB_BLUE);     // BLE3
+                rgb_matrix_set_color(28, RGB_BLUE);     // BLE2
+                rgb_matrix_set_color(29, RGB_BLUE);     // BLE1
+            }
+            break;
+        // layer 2 Win
+        case 6:
+            rgb_matrix_set_color(73, RGB_WHITE);     // layer TG
+            break;
+        // layer 2 Win fn
+        case 7:
+            rgb_matrix_set_color(73, 0, 0, 0);      // layer TG
+            rgb_matrix_set_color(44, RGB_YELLOW);   // show battery
+            rgb_matrix_set_color(43, RGB_YELLOW);   // sleep mode
+            rgb_matrix_set_color(42, RGB_YELLOW);   // dev reset
+            rgb_matrix_set_color(63, RGB_YELLOW);   // rgb test
+            rgb_matrix_set_color(65, RGB_YELLOW);   // show battery percentage
+            rgb_matrix_set_color(67, RGB_YELLOW);   // layer extra
+            rgb_matrix_set_color(68, RGB_RED);      // rgb speed down
+            rgb_matrix_set_color(69, RGB_GREEN);    // rgb speed up
+            rgb_matrix_set_color(72, RGB_GREEN);    // rgb light up
+            rgb_matrix_set_color(75, RGB_RED);      // rgb light down
+            rgb_matrix_set_color(74, RGB_YELLOW);   // rgb hui
+            rgb_matrix_set_color(76, RGB_YELLOW);   // rgb mode
+            if (dev_info.link_mode != LINK_USB && f_bat_num_show == 0) {
+                rgb_matrix_set_color(26, RGB_GREEN);    // RF
+                rgb_matrix_set_color(27, RGB_BLUE);     // BLE3
+                rgb_matrix_set_color(28, RGB_BLUE);     // BLE2
+                rgb_matrix_set_color(29, RGB_BLUE);     // BLE1
+            }
+            break;
+        // layer extra
+        case 8:
+            rgb_matrix_set_color(0, RGB_WHITE);     // escape
+            rgb_matrix_set_color(15, RGB_WHITE);    // delete
+            rgb_matrix_set_color(68, RGB_RED);      // rgb side speed down
+            rgb_matrix_set_color(69, RGB_GREEN);    // rgb side speed up
+            rgb_matrix_set_color(72, RGB_GREEN);    // rgb side light up
+            rgb_matrix_set_color(75, RGB_RED);      // rgb side light down
+            rgb_matrix_set_color(74, RGB_YELLOW);   // rgb side hui
+            rgb_matrix_set_color(76, RGB_YELLOW);   // rgb side mode
+            break;
+        default:
+            break;
+    }
+
+    // set rgb color according to the current device connected
+    if (dev_info.link_mode != LINK_USB) {
+        switch(dev_info.link_mode) {
+            case LINK_BT_1:
+                rgb_matrix_set_color(16, RGB_WHITE);
                 break;
-            case 1:
-                rgb_matrix_set_color(73, RGB_WHITE);
+            case LINK_BT_2:
+                rgb_matrix_set_color(45, RGB_WHITE);
                 break;
-            case 2:
-                rgb_matrix_set_color(73, 0, 0, 0);
-                break;
-            case 3:
-                rgb_matrix_set_color(73, RGB_WHITE);
+            case LINK_BT_3:
+                rgb_matrix_set_color(46, RGB_WHITE);
                 break;
             default:
+                rgb_matrix_set_color(16, 0, 0, 0);
+                rgb_matrix_set_color(45, 0, 0, 0);
+                rgb_matrix_set_color(46, 0, 0, 0);
                 break;
+        }
+    } else {
+        rgb_matrix_set_color(16, 0, 0, 0);
+        rgb_matrix_set_color(45, 0, 0, 0);
+        rgb_matrix_set_color(46, 0, 0, 0);
     }
     return true;
 }
