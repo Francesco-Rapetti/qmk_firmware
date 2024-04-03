@@ -681,16 +681,16 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
             }
             return false;
 
-        case LAYER_THREE:
-            if (record->event.pressed) {
-                // when keycode LAYER_THREE is pressed
-                rgb_matrix_set_color(0, RGB_RED);
-                rgb_matrix_set_color(73, RGB_RED);
-                SEND_STRING("Switched to Layer 3");
-            } else {
-                // when keycode LAYER_THREE is released
-            }
-            return false;
+        // case LAYER_THREE:
+        //     if (record->event.pressed) {
+        //         // when keycode LAYER_THREE is pressed
+        //         rgb_matrix_set_color(0, RGB_RED);
+        //         rgb_matrix_set_color(73, RGB_RED);
+        //         SEND_STRING("Switched to Layer 3");
+        //     } else {
+        //         // when keycode LAYER_THREE is released
+        //     }
+        //     return false;
 
         default:
             return true;
@@ -704,6 +704,17 @@ bool rgb_matrix_indicators_user(void)
         num_led_show();
     }
     rgb_matrix_set_color(RGB_MATRIX_LED_COUNT-1, 0, 0, 0);
+
+    switch(get_highest_layer(layer_state|default_layer_state)) {
+            case 2:
+                rgb_matrix_set_color(73, RGB_BLUE);
+                break;
+            case 3:
+                rgb_matrix_set_color(73, RGB_YELLOW);
+                break;
+            default:
+                break;
+    }
     return true;
 }
 
