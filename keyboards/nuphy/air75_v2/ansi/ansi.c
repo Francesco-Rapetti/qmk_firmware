@@ -705,7 +705,7 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
         case WIN_SEARCH:
             if (record->event.pressed) {
                 // when keycode is pressed
-
+                SEND_STRING(SS_DOWN(X_LALT) SS_TAP(X_SPACE) SS_UP(X_LALT));
             } else {
                 // when keycode is released
             }
@@ -714,7 +714,7 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
         case WIN_VOICE:
             if (record->event.pressed) {
                 // when keycode is pressed
-
+                SEND_STRING(SS_DOWN(X_LGUI) SS_DOWN(X_LSFT) SS_TAP(X_A) SS_UP(X_LSFT) SS_UP(X_LGUI));
             } else {
                 // when keycode is released
             }
@@ -723,7 +723,7 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
         case WIN_DND:
             if (record->event.pressed) {
                 // when keycode is pressed
-
+                SEND_STRING(SS_DOWN(X_LGUI) SS_TAP(X_N) SS_UP(X_LGUI) SS_DELAY(1000) SS_TAP(X_ENT) SS_DOWN(X_LGUI) SS_TAP(X_N) SS_UP(X_LGUI));
             } else {
                 // when keycode is released
             }
@@ -732,7 +732,7 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
         case WIN_CONSOLE:
             if (record->event.pressed) {
                 // when keycode is pressed
-
+                SEND_STRING(SS_DOWN(X_LGUI) SS_TAP(X_R) SS_UP(X_LGUI) SS_DELAY(500) "powershell" SS_TAP(X_ENT));
             } else {
                 // when keycode is released
             }
