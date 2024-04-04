@@ -50,8 +50,8 @@ enum custom_keycodes {
 
     // windows shortcuts
     WIN_TASK = SAFE_RANGE,
-    WIN_SEARCH, // only with powertoys installed
-    WIN_VOICE,
+    WIN_SEARCH,     // only with powertoys installed
+    WIN_VOICE,      // only with powertoys installed
     WIN_DND,
     WIN_CONSOLE,
 
