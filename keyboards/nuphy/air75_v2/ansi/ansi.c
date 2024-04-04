@@ -844,9 +844,9 @@ bool rgb_matrix_indicators_kb(void)
         case 4:
             rgb_matrix_set_color(73, 0, 0, 0);      // layer TG
             if (mic_active) {
-                rgb_matrix_set_color(5, RGB_WHITE); // mic
-            } else {
                 rgb_matrix_set_color(5, 0, 0, 0);   // mic
+            } else {
+                rgb_matrix_set_color(5, RGB_WHITE); // mic
             }
             break;
         // layer 1 Win fn
@@ -871,18 +871,18 @@ bool rgb_matrix_indicators_kb(void)
                 rgb_matrix_set_color(29, RGB_BLUE);     // BLE1
             }
             if (mic_active) {
-                rgb_matrix_set_color(5, RGB_WHITE); // mic
-            } else {
                 rgb_matrix_set_color(5, 0, 0, 0);   // mic
+            } else {
+                rgb_matrix_set_color(5, RGB_WHITE); // mic
             }
             break;
         // layer 2 Win
         case 6:
             rgb_matrix_set_color(73, RGB_WHITE);     // layer TG
             if (mic_active) {
-                rgb_matrix_set_color(5, RGB_WHITE); // mic
-            } else {
                 rgb_matrix_set_color(5, 0, 0, 0);   // mic
+            } else {
+                rgb_matrix_set_color(5, RGB_WHITE); // mic
             }
             break;
         // layer 2 Win fn
@@ -907,9 +907,9 @@ bool rgb_matrix_indicators_kb(void)
                 rgb_matrix_set_color(29, RGB_BLUE);     // BLE1
             }
             if (mic_active) {
-                rgb_matrix_set_color(5, RGB_WHITE); // mic
-            } else {
                 rgb_matrix_set_color(5, 0, 0, 0);   // mic
+            } else {
+                rgb_matrix_set_color(5, RGB_WHITE); // mic
             }
             break;
         // layer extra
