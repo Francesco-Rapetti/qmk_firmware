@@ -44,6 +44,8 @@ bool f_rf_new_adv_ok    = 0;
 bool f_rf_reset         = 0;
 bool f_wakeup_prepare   = 0;
 
+bool mic_active         = 1;
+
 uint16_t       rf_linking_time       = 0;
 uint16_t       rf_link_show_time     = 0;
 uint8_t        rf_blink_cnt          = 0;
@@ -728,6 +730,11 @@ bool process_record_kb(uint16_t keycode, keyrecord_t *record) {
             if (record->event.pressed) {
                 // when keycode is pressed
                 SEND_STRING(SS_DOWN(X_LGUI) SS_DOWN(X_LSFT) SS_TAP(X_A) SS_UP(X_LSFT) SS_UP(X_LGUI));
+                if (mic_active) {
+                    mic_active = 0;
+                } else {
+                    mic_active = 1;
+                }
             } else {
                 // when keycode is released
             }
@@ -836,6 +843,11 @@ bool rgb_matrix_indicators_kb(void)
         // layer 1 Win
         case 4:
             rgb_matrix_set_color(73, 0, 0, 0);      // layer TG
+            if (mic_active) {
+                rgb_matrix_set_color(5, RGB_WHITE); // mic
+            } else {
+                rgb_matrix_set_color(5, 0, 0, 0);   // mic
+            }
             break;
         // layer 1 Win fn
         case 5:
@@ -858,10 +870,20 @@ bool rgb_matrix_indicators_kb(void)
                 rgb_matrix_set_color(28, RGB_BLUE);     // BLE2
                 rgb_matrix_set_color(29, RGB_BLUE);     // BLE1
             }
+            if (mic_active) {
+                rgb_matrix_set_color(5, RGB_WHITE); // mic
+            } else {
+                rgb_matrix_set_color(5, 0, 0, 0);   // mic
+            }
             break;
         // layer 2 Win
         case 6:
             rgb_matrix_set_color(73, RGB_WHITE);     // layer TG
+            if (mic_active) {
+                rgb_matrix_set_color(5, RGB_WHITE); // mic
+            } else {
+                rgb_matrix_set_color(5, 0, 0, 0);   // mic
+            }
             break;
         // layer 2 Win fn
         case 7:
@@ -883,6 +905,11 @@ bool rgb_matrix_indicators_kb(void)
                 rgb_matrix_set_color(27, RGB_BLUE);     // BLE3
                 rgb_matrix_set_color(28, RGB_BLUE);     // BLE2
                 rgb_matrix_set_color(29, RGB_BLUE);     // BLE1
+            }
+            if (mic_active) {
+                rgb_matrix_set_color(5, RGB_WHITE); // mic
+            } else {
+                rgb_matrix_set_color(5, 0, 0, 0);   // mic
             }
             break;
         // layer extra
