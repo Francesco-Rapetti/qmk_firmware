@@ -795,9 +795,15 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
         case KC_ESC:
             if (record->event.pressed) {
                 // when keycode is pressed
-                SEND_STRING(SS_TAP(X_ESC));
+                const uint8_t mods = get_mods() | get_oneshot_mods() | get_weak_mods();
+                if (mods == MOD_BIT(KC_LALT)) {
+                    SEND_STRING(SS_DOWN(X_LALT) SS_TAP(X_F4) SS_UP(X_LALT));
+                } else {
+                    // SEND_STRING(SS_DOWN(X_ESC));
+                }
             } else {
                 // when keycode is released
+                // SEND_STRING(SS_UP(X_ESC));
             }
             return false;
 
