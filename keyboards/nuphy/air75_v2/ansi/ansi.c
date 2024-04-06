@@ -887,7 +887,7 @@ bool rgb_matrix_indicators_user(void) {
         // layer 1 Win
         case 4:
             rgb_matrix_set_color(73, 0, 0, 0); // layer TG
-            if (mic1_active && dev_info.link_mode == LINK_BT_1 || mic2_active && dev_info.link_mode == LINK_BT_2 || mic3_active && dev_info.link_mode == LINK_BT_3 || mic4_active && dev_info.link_mode == LINK_RF_24 || mic5_active && dev_info.link_mode == LINK_USB) {
+            if ((mic1_active && dev_info.link_mode == LINK_BT_1) || (mic2_active && dev_info.link_mode == LINK_BT_2) || (mic3_active && dev_info.link_mode == LINK_BT_3) || (mic4_active && dev_info.link_mode == LINK_RF_24) || (mic5_active && dev_info.link_mode == LINK_USB)) {
                 rgb_matrix_set_color(5, 0, 0, 0); // mic
             } else {
                 rgb_matrix_set_color(5, RGB_WHITE); // mic
@@ -914,7 +914,7 @@ bool rgb_matrix_indicators_user(void) {
                 rgb_matrix_set_color(28, RGB_BLUE);  // BLE2
                 rgb_matrix_set_color(29, RGB_BLUE);  // BLE1
             }
-            if (mic1_active && dev_info.link_mode == LINK_BT_1 || mic2_active && dev_info.link_mode == LINK_BT_2 || mic3_active && dev_info.link_mode == LINK_BT_3 || mic4_active && dev_info.link_mode == LINK_RF_24 || mic5_active && dev_info.link_mode == LINK_USB) {
+            if ((mic1_active && dev_info.link_mode == LINK_BT_1) || (mic2_active && dev_info.link_mode == LINK_BT_2) || (mic3_active && dev_info.link_mode == LINK_BT_3) || (mic4_active && dev_info.link_mode == LINK_RF_24) || (mic5_active && dev_info.link_mode == LINK_USB)) {
                 rgb_matrix_set_color(5, 0, 0, 0); // mic
             } else {
                 rgb_matrix_set_color(5, RGB_WHITE); // mic
@@ -923,7 +923,7 @@ bool rgb_matrix_indicators_user(void) {
         // layer 2 Win
         case 6:
             rgb_matrix_set_color(73, RGB_WHITE); // layer TG
-            if (mic1_active && dev_info.link_mode == LINK_BT_1 || mic2_active && dev_info.link_mode == LINK_BT_2 || mic3_active && dev_info.link_mode == LINK_BT_3 || mic4_active && dev_info.link_mode == LINK_RF_24 || mic5_active && dev_info.link_mode == LINK_USB) {
+            if ((mic1_active && dev_info.link_mode == LINK_BT_1) || (mic2_active && dev_info.link_mode == LINK_BT_2) || (mic3_active && dev_info.link_mode == LINK_BT_3) || (mic4_active && dev_info.link_mode == LINK_RF_24) || (mic5_active && dev_info.link_mode == LINK_USB)) {
                 rgb_matrix_set_color(5, 0, 0, 0); // mic
             } else {
                 rgb_matrix_set_color(5, RGB_WHITE); // mic
@@ -950,7 +950,7 @@ bool rgb_matrix_indicators_user(void) {
                 rgb_matrix_set_color(28, RGB_BLUE);  // BLE2
                 rgb_matrix_set_color(29, RGB_BLUE);  // BLE1
             }
-            if (mic1_active && dev_info.link_mode == LINK_BT_1 || mic2_active && dev_info.link_mode == LINK_BT_2 || mic3_active && dev_info.link_mode == LINK_BT_3 || mic4_active && dev_info.link_mode == LINK_RF_24 || mic5_active && dev_info.link_mode == LINK_USB) {
+            if ((mic1_active && dev_info.link_mode == LINK_BT_1) || (mic2_active && dev_info.link_mode == LINK_BT_2) || (mic3_active && dev_info.link_mode == LINK_BT_3) || (mic4_active && dev_info.link_mode == LINK_RF_24) || (mic5_active && dev_info.link_mode == LINK_USB)) {
                 rgb_matrix_set_color(5, 0, 0, 0); // mic
             } else {
                 rgb_matrix_set_color(5, RGB_WHITE); // mic
