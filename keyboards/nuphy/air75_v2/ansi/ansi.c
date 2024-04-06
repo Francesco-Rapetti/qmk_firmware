@@ -15,9 +15,6 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-// FIXME: set mic identifier according to current device
-// TODO: set LALT+esc to ALT+F4
-
 #include "ansi.h"
 #include "usb_main.h"
 
@@ -799,11 +796,11 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
                 if (mods == MOD_BIT(KC_LALT)) {
                     SEND_STRING(SS_DOWN(X_LALT) SS_TAP(X_F4) SS_UP(X_LALT));
                 } else {
-                    // SEND_STRING(SS_DOWN(X_ESC));
+                    SEND_STRING(SS_DOWN(X_ESC));
                 }
             } else {
                 // when keycode is released
-                // SEND_STRING(SS_UP(X_ESC));
+                SEND_STRING(SS_UP(X_ESC));
             }
             return false;
 
