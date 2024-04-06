@@ -744,7 +744,7 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
                             mic4_active = 1;
                         }
                         break;
-                    case LINK_BT_1:
+                    case LINK_BT_3:
                         if (mic3_active) {
                             mic3_active = 0;
                         } else {
@@ -758,7 +758,7 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
                             mic2_active = 1;
                         }
                         break;
-                    case LINK_BT_3:
+                    case LINK_BT_1:
                         if (mic1_active) {
                             mic1_active = 0;
                         } else {
