@@ -35,12 +35,6 @@ bool f_dev_reset_press = 0;
 bool f_rgb_test_press  = 0;
 bool f_bat_num_show    = 0;
 
-bool mic1_active = 1;
-bool mic2_active = 1;
-bool mic3_active = 1;
-bool mic4_active = 1;
-bool mic5_active = 1;
-
 uint16_t       rf_linking_time       = 0;
 uint16_t       rf_link_show_time     = 0;
 uint8_t        rf_blink_cnt          = 0;
@@ -726,46 +720,6 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
             if (record->event.pressed) {
                 // when keycode is pressed
                 SEND_STRING(SS_DOWN(X_LGUI) SS_DOWN(X_LSFT) SS_TAP(X_A) SS_UP(X_LSFT) SS_UP(X_LGUI));
-                switch (dev_info.link_mode) {
-                    case LINK_USB:
-                        if (mic5_active) {
-                            mic5_active = 0;
-                        } else {
-                            mic5_active = 1;
-                        }
-                        break;
-                    case LINK_RF_24:
-                        if (mic4_active) {
-                            mic4_active = 0;
-                        } else {
-                            mic4_active = 1;
-                        }
-                        break;
-                    case LINK_BT_3:
-                        if (mic3_active) {
-                            mic3_active = 0;
-                        } else {
-                            mic3_active = 1;
-                        }
-                        break;
-                    case LINK_BT_2:
-                        if (mic2_active) {
-                            mic2_active = 0;
-                        } else {
-                            mic2_active = 1;
-                        }
-                        break;
-                    case LINK_BT_1:
-                        if (mic1_active) {
-                            mic1_active = 0;
-                        } else {
-                            mic1_active = 1;
-                        }
-                        break;
-                    default:
-                        break;
-                }
-
             } else {
                 // when keycode is released
             }
@@ -884,11 +838,6 @@ bool rgb_matrix_indicators_user(void) {
         // layer 1 Win
         case 4:
             rgb_matrix_set_color(73, 0, 0, 0); // layer TG
-            if ((mic1_active && dev_info.link_mode == LINK_BT_1) || (mic2_active && dev_info.link_mode == LINK_BT_2) || (mic3_active && dev_info.link_mode == LINK_BT_3) || (mic4_active && dev_info.link_mode == LINK_RF_24) || (mic5_active && dev_info.link_mode == LINK_USB)) {
-                rgb_matrix_set_color(5, 0, 0, 0); // mic
-            } else {
-                rgb_matrix_set_color(5, RGB_WHITE); // mic
-            }
             break;
         // layer 1 Win fn
         case 5:
@@ -911,20 +860,10 @@ bool rgb_matrix_indicators_user(void) {
                 rgb_matrix_set_color(28, RGB_BLUE);  // BLE2
                 rgb_matrix_set_color(29, RGB_BLUE);  // BLE1
             }
-            if ((mic1_active && dev_info.link_mode == LINK_BT_1) || (mic2_active && dev_info.link_mode == LINK_BT_2) || (mic3_active && dev_info.link_mode == LINK_BT_3) || (mic4_active && dev_info.link_mode == LINK_RF_24) || (mic5_active && dev_info.link_mode == LINK_USB)) {
-                rgb_matrix_set_color(5, 0, 0, 0); // mic
-            } else {
-                rgb_matrix_set_color(5, RGB_WHITE); // mic
-            }
             break;
         // layer 2 Win
         case 6:
             rgb_matrix_set_color(73, RGB_WHITE); // layer TG
-            if ((mic1_active && dev_info.link_mode == LINK_BT_1) || (mic2_active && dev_info.link_mode == LINK_BT_2) || (mic3_active && dev_info.link_mode == LINK_BT_3) || (mic4_active && dev_info.link_mode == LINK_RF_24) || (mic5_active && dev_info.link_mode == LINK_USB)) {
-                rgb_matrix_set_color(5, 0, 0, 0); // mic
-            } else {
-                rgb_matrix_set_color(5, RGB_WHITE); // mic
-            }
             break;
         // layer 2 Win fn
         case 7:
@@ -946,11 +885,6 @@ bool rgb_matrix_indicators_user(void) {
                 rgb_matrix_set_color(27, RGB_BLUE);  // BLE3
                 rgb_matrix_set_color(28, RGB_BLUE);  // BLE2
                 rgb_matrix_set_color(29, RGB_BLUE);  // BLE1
-            }
-            if ((mic1_active && dev_info.link_mode == LINK_BT_1) || (mic2_active && dev_info.link_mode == LINK_BT_2) || (mic3_active && dev_info.link_mode == LINK_BT_3) || (mic4_active && dev_info.link_mode == LINK_RF_24) || (mic5_active && dev_info.link_mode == LINK_USB)) {
-                rgb_matrix_set_color(5, 0, 0, 0); // mic
-            } else {
-                rgb_matrix_set_color(5, RGB_WHITE); // mic
             }
             break;
         // layer extra
