@@ -87,9 +87,9 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
 	_______, 	KC_F1,  	KC_F2,  	KC_F3, 		KC_F4,  	KC_F5,  	KC_F6,  	KC_F7,  	KC_F8,  	KC_F9, 		KC_F10, 	KC_F11, 	KC_F12, 	_______,	_______,	_______,
 	_______, 	LNK_BLE1,  	LNK_BLE2,  	LNK_BLE3,  	LNK_RF,   	_______,   	_______,   	_______,   	_______,   	_______,  	_______,   	_______,	_______, 				_______,	_______,
 	_______, 	KC_BTN2,    KC_MS_U,    KC_BTN1,    KC_WH_U,    KC_BTN3,	_______,   	_______,   	_______,   	_______,  	_______,   	DEV_RESET,	SLEEP_MODE, 			BAT_SHOW,	_______,
-	_______,	KC_MS_L,    KC_MS_D,    KC_MS_R,    KC_WH_D,    _______,   	_______,	_______,   	_______,   	_______,  	_______,	_______, 	 						_______,	_______,
-	_______,				_______,   	_______,   	RGB_TEST,  	_______,   	BAT_NUM,   	_______,	MO(8), 		RGB_SPD,	RGB_SPI,	_______,				_______,	RGB_VAI,	TG(6),
-	_______,	_______,	_______,										_______, 							_______,	MO(5),   	_______,			    RGB_MOD,	RGB_VAD,    RGB_HUI),
+	_______,	KC_MS_L,    KC_MS_D,    KC_MS_R,    KC_WH_D,    _______,   	_______,	_______,   	_______,   	_______,  	_______,	_______, 	 						KC_BTN1,	_______,
+	KC_ACL2,				_______,   	_______,   	RGB_TEST,  	_______,   	BAT_NUM,   	_______,	MO(8), 		RGB_SPD,	RGB_SPI,	_______,				_______,	RGB_VAI,	TG(6),
+	KC_ACL1,	_______,	_______,										_______, 							_______,	MO(5),   	_______,			    RGB_MOD,	RGB_VAD,    RGB_HUI),
 
     // layer 2 Win
 [6] = LAYOUT_ansi_84(
@@ -105,10 +105,10 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
 [7] = LAYOUT_ansi_84(
 	_______, 	KC_BRID,   	KC_BRIU,    WIN_TASK,  	WIN_SEARCH, WIN_VOICE,  WIN_DND,   	KC_MPRV,   	KC_MPLY,   	KC_MNXT,  	KC_MUTE, 	KC_VOLD, 	KC_VOLU,	_______,	_______,    _______,
 	_______, 	LNK_BLE1,  	LNK_BLE2,  	LNK_BLE3,  	LNK_RF,   	_______,   	_______,   	_______,   	_______,   	_______,  	_______,   	_______,	_______, 				_______,	_______,
-	_______, 	_______,   	_______,   	_______,  	_______,   	_______,   	_______,   	_______,   	_______,   	_______,  	_______,   	DEV_RESET,	SLEEP_MODE, 			BAT_SHOW,	_______,
-	_______,	_______,   	_______,   	_______,  	_______,   	_______,   	_______,	_______,   	_______,   	_______,  	_______,	_______, 	 						_______,	_______,
-	_______,				_______,   	_______,   	RGB_TEST,  	_______,   	BAT_NUM,   	_______,	MO(8), 		RGB_SPD,	RGB_SPI,	_______,				_______,	RGB_VAI,	TG(6),
-	_______,	_______,	_______,										_______, 							_______,	MO(7),   	_______,			    RGB_MOD,	RGB_VAD,    RGB_HUI),
+	_______, 	KC_BTN2,    KC_MS_U,    KC_BTN1,    KC_WH_U,    KC_BTN3,	_______,   	_______,   	_______,   	_______,  	_______,   	DEV_RESET,	SLEEP_MODE, 			BAT_SHOW,	_______,
+	_______,	KC_MS_L,    KC_MS_D,    KC_MS_R,    KC_WH_D,    _______,   	_______,	_______,   	_______,   	_______,  	_______,	_______, 	 						KC_BTN1,	_______,
+	KC_ACL2,				_______,   	_______,   	RGB_TEST,  	_______,   	BAT_NUM,   	_______,	MO(8), 		RGB_SPD,	RGB_SPI,	_______,				_______,	RGB_VAI,	TG(6),
+	KC_ACL1,	_______,	_______,										_______, 							_______,	MO(7),   	_______,			    RGB_MOD,	RGB_VAD,    RGB_HUI),
 
 // layer extra
 [8] = LAYOUT_ansi_84(

@@ -860,6 +860,18 @@ bool rgb_matrix_indicators_user(void) {
                 rgb_matrix_set_color(28, RGB_BLUE);  // BLE2
                 rgb_matrix_set_color(29, RGB_BLUE);  // BLE1
             }
+            rgb_matrix_set_color(32, RGB_WHITE);    // mouse button 2
+            rgb_matrix_set_color(33, RGB_WHITE);    // mouse cursor up
+            rgb_matrix_set_color(34, RGB_WHITE);    // mouse button 1
+            rgb_matrix_set_color(35, RGB_WHITE);    // mouse wheel up
+            rgb_matrix_set_color(36, RGB_WHITE);    // mouse button 3
+            rgb_matrix_set_color(47, RGB_WHITE);    // mouse button 1
+            rgb_matrix_set_color(55, RGB_WHITE);    // mouse wheel down
+            rgb_matrix_set_color(56, RGB_WHITE);    // mouse cursor right
+            rgb_matrix_set_color(57, RGB_WHITE);    // mouse cursor down
+            rgb_matrix_set_color(58, RGB_WHITE);    // mouse cursor left
+            rgb_matrix_set_color(60, RGB_WHITE);    // mouse accellerate up
+            rgb_matrix_set_color(83, RGB_WHITE);    // mouse accellerate down
             break;
         // layer 2 Win
         case 6:
@@ -886,6 +898,18 @@ bool rgb_matrix_indicators_user(void) {
                 rgb_matrix_set_color(28, RGB_BLUE);  // BLE2
                 rgb_matrix_set_color(29, RGB_BLUE);  // BLE1
             }
+            rgb_matrix_set_color(32, RGB_WHITE);    // mouse button 2
+            rgb_matrix_set_color(33, RGB_WHITE);    // mouse cursor up
+            rgb_matrix_set_color(34, RGB_WHITE);    // mouse button 1
+            rgb_matrix_set_color(35, RGB_WHITE);    // mouse wheel up
+            rgb_matrix_set_color(36, RGB_WHITE);    // mouse button 3
+            rgb_matrix_set_color(47, RGB_WHITE);    // mouse button 1
+            rgb_matrix_set_color(55, RGB_WHITE);    // mouse wheel down
+            rgb_matrix_set_color(56, RGB_WHITE);    // mouse cursor right
+            rgb_matrix_set_color(57, RGB_WHITE);    // mouse cursor down
+            rgb_matrix_set_color(58, RGB_WHITE);    // mouse cursor left
+            rgb_matrix_set_color(60, RGB_WHITE);    // mouse accellerate up
+            rgb_matrix_set_color(83, RGB_WHITE);    // mouse accellerate down
             break;
         // layer extra
         case 8:
