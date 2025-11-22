@@ -47,7 +47,7 @@ extern uint8_t bytekb_report_buf[8];
 
 bool f_goto_sleep       = 0;
 bool f_bat_show         = 0;
-bool f_bat_hold         = 0;
+bool f_bat_hold         = 1;
 bool f_chg_show         = 1;
 bool f_sys_show         = 0;
 bool f_sleep_show       = 0;
@@ -62,7 +62,7 @@ bool f_rf_send_byte     = 0;
 bool f_rf_send_consume  = 0;
 bool f_dial_sw_init_ok  = 0;
 bool f_rf_sw_press      = 0;
-bool f_wakeup_prepare   = 0; 
+bool f_wakeup_prepare   = 0;
 bool f_dev_reset_press  = 0;
 bool f_rgb_test_press   = 0;
 bool f_win_lock         = 0;
@@ -193,7 +193,7 @@ void long_press_key(void)
                 default_layer_set(1 << 0);
                 keymap_config.nkro = 0;
             } else {
-                default_layer_set(1 << 2);
+                default_layer_set(1 << 4);
                 keymap_config.nkro = 1;
             }
         }
@@ -344,7 +344,7 @@ void dial_sw_scan(void)
     } else {
         if (dev_info.sys_sw_state != SYS_SW_WIN) {
             f_sys_show = 1;
-            default_layer_set(1 << 2);
+            default_layer_set(1 << 4);
             dev_info.sys_sw_state = SYS_SW_WIN;
             keymap_config.no_gui  = f_win_lock;
             m_break_all_key();
@@ -421,7 +421,7 @@ void m_power_on_dial_sw_scan(void)
         }
     } else {
         if (dev_info.sys_sw_state != SYS_SW_WIN) {
-            default_layer_set(1 << 2);
+            default_layer_set(1 << 4);
             dev_info.sys_sw_state = SYS_SW_WIN;
             keymap_config.nkro    = 1;
             m_break_all_key();
@@ -435,7 +435,7 @@ bool process_record_kb(uint16_t keycode, keyrecord_t *record) {
         return false;
     }
     no_act_time = 0;
-    
+
     switch (keycode) {
         case RF_DFU:
             if (record->event.pressed) {
@@ -475,7 +475,11 @@ bool process_record_kb(uint16_t keycode, keyrecord_t *record) {
         case LNK_BLE1:
             if (record->event.pressed) {
                 if (dev_info.link_mode != LINK_USB) {
-                    rf_sw_temp    = LINK_BT_1;
+                    if (dev_info.link_mode == LINK_BT_1) {
+                        rf_sw_temp = LINK_RF_24;
+                    } else {
+                        rf_sw_temp = LINK_BT_1;
+                    }
                     f_rf_sw_press = 1;
                     m_break_all_key();
                 }
@@ -493,7 +497,11 @@ bool process_record_kb(uint16_t keycode, keyrecord_t *record) {
         case LNK_BLE2:
             if (record->event.pressed) {
                 if (dev_info.link_mode != LINK_USB) {
-                    rf_sw_temp    = LINK_BT_2;
+                    if (dev_info.link_mode == LINK_BT_2) {
+                        rf_sw_temp = LINK_RF_24;
+                    } else {
+                        rf_sw_temp = LINK_BT_2;
+                    }
                     f_rf_sw_press = 1;
                     m_break_all_key();
                 }
@@ -511,7 +519,11 @@ bool process_record_kb(uint16_t keycode, keyrecord_t *record) {
         case LNK_BLE3:
             if (record->event.pressed) {
                 if (dev_info.link_mode != LINK_USB) {
-                    rf_sw_temp    = LINK_BT_3;
+                    if (dev_info.link_mode == LINK_BT_3) {
+                        rf_sw_temp = LINK_RF_24;
+                    } else {
+                        rf_sw_temp = LINK_BT_3;
+                    }
                     f_rf_sw_press = 1;
                     m_break_all_key();
                 }
@@ -689,8 +701,8 @@ bool process_record_kb(uint16_t keycode, keyrecord_t *record) {
 
             if(rgb_matrix_config.hsv.v == RGB_MATRIX_MAXIMUM_BRIGHTNESS - RGB_MATRIX_VAL_STEP * 2) {
                 if(dev_info.link_mode == LINK_USB) {
-                   rgb_matrix_increase_val(); 
-                } 
+                   rgb_matrix_increase_val();
+                }
                 return true;
             }
             else if(rgb_matrix_config.hsv.v == RGB_MATRIX_MAXIMUM_BRIGHTNESS - RGB_MATRIX_VAL_STEP) {
@@ -700,7 +712,7 @@ bool process_record_kb(uint16_t keycode, keyrecord_t *record) {
 
         case RGB_VAD:
             if(rgb_matrix_config.hsv.v == RGB_MATRIX_MAXIMUM_BRIGHTNESS) {
-                rgb_matrix_decrease_val(); 
+                rgb_matrix_decrease_val();
             }
             return true;
 
@@ -819,6 +831,79 @@ bool rgb_matrix_indicators_advanced_user(uint8_t led_min, uint8_t led_max)
     }
 
     rgb_matrix_set_color(RGB_MATRIX_LED_COUNT-1, 0, 0, 0);
+
+     // set rgb color according to the current layer
+    switch (get_highest_layer(layer_state | default_layer_state)) {
+        // layer 1 Mac
+        case 0:
+            rgb_matrix_set_color(16, RGB_WHITE); // layer TG
+            break;
+        // layer 1 Mac fn
+        case 1:
+            rgb_matrix_set_color(16, 0, 0, 0);  // layer TG
+            break;
+        // layer 2 Mac
+        case 2:
+            rgb_matrix_set_color(16, 0, 0, 0); // layer TG
+            break;
+        // layer 2 Mac fn
+        case 3:
+            rgb_matrix_set_color(16, RGB_WHITE);  // layer TG
+            break;
+        // layer 1 Win
+        case 4:
+            rgb_matrix_set_color(16, RGB_WHITE); // layer TG
+            break;
+        // layer 1 Win fn
+        case 5:
+            rgb_matrix_set_color(16, 0, 0, 0);  // layer TG
+            break;
+        // layer 2 Win
+        case 6:
+            rgb_matrix_set_color(16, 0, 0, 0); // layer TG
+            break;
+        // layer 2 Win fn
+        case 7:
+            rgb_matrix_set_color(16, RGB_WHITE);    // layer TG
+            break;
+        // layer extra
+        case 8:
+            break;
+        default:
+            break;
+    }
+
+    // set rgb color according to the current device connected
+    if (dev_info.link_mode != LINK_USB) {
+        switch (dev_info.link_mode) {
+            case LINK_BT_1:
+                rgb_matrix_set_color(48, RGB_WHITE);
+                rgb_matrix_set_color(18, RGB_BLUE);
+                break;
+            case LINK_BT_2:
+                rgb_matrix_set_color(49, RGB_WHITE);
+                rgb_matrix_set_color(18, RGB_BLUE);
+                break;
+            case LINK_BT_3:
+                rgb_matrix_set_color(50, RGB_WHITE);
+                rgb_matrix_set_color(18, RGB_BLUE);
+                break;
+            default:
+                rgb_matrix_set_color(48, 0, 0, 0);
+                rgb_matrix_set_color(49, 0, 0, 0);
+                rgb_matrix_set_color(50, 0, 0, 0);
+                rgb_matrix_set_color(18, RGB_GREEN);
+                break;
+        }
+    } else {
+        rgb_matrix_set_color(48, 0, 0, 0);
+        rgb_matrix_set_color(49, 0, 0, 0);
+        rgb_matrix_set_color(50, 0, 0, 0);
+        // HSV hsv = { RGB_DEFAULT_COLOUR, 255, rgb_matrix_config.hsv.v };
+        HSV hsv = rgb_matrix_config.hsv;
+        RGB rgb = hsv_to_rgb(hsv);
+        rgb_matrix_set_color(18, rgb.r, rgb.g, rgb.b);
+    }
     return true;
 }
 
