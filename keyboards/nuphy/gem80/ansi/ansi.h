@@ -82,7 +82,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #define HOST_RF_TYPE            2
 
 #define LINK_TIMEOUT            (100 * 120)
-#define SLEEP_TIME_DELAY        (100 * 360)
+#define SLEEP_TIME_DELAY        (100 * 300)
 #define POWER_DOWN_DELAY        (24)
 
 #define RF_LONG_PRESS_DELAY     30
@@ -96,12 +96,12 @@ enum custom_keycodes {
     LNK_BLE2,
     LNK_BLE3,
 
-    MAC_TASK,      
-    MAC_SEARCH,    
+    MAC_TASK,
+    MAC_SEARCH,
     MAC_VOICE,
-    MAC_CONSOLE,    
+    MAC_CONSOLE,
     MAC_DND,
-    
+
     WIN_LOCK,
     DEV_RESET,
     SLEEP_MODE,
