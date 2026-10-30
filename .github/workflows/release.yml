@@ -1,0 +1,86 @@
+name: Release Firmware
+
+permissions:
+  contents: write
+
+on:
+  push:
+    tags: ["v*"]
+  release:
+    types: [published]
+  workflow_dispatch:
+
+concurrency:
+  group: release-${{ github.ref_name }}
+  cancel-in-progress: false
+
+env:
+  KEYMAP: Francesco-Rapetti
+
+jobs:
+  build:
+    name: "Compile ${{ matrix.keyboard }}"
+    runs-on: ubuntu-latest
+    container: ghcr.io/qmk/qmk_cli
+
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - keyboard: nuphy/air75_v2/ansi
+            artifact: air75_v2
+          - keyboard: nuphy/gem80/ansi
+            artifact: gem80
+          - keyboard: nuphy/kick75/ansi
+            artifact: kick75
+
+    steps:
+      - name: Disable safe.directory check
+        run: |
+          git config --global --add safe.directory '*'
+
+      - name: Checkout QMK Firmware
+        uses: actions/checkout@v4
+        with:
+          submodules: recursive
+
+      - name: Compile firmware
+        run: |
+          qmk compile -kb ${{ matrix.keyboard }} -km ${{ env.KEYMAP }}
+
+      - name: Upload firmware
+        uses: actions/upload-artifact@v4
+        with:
+          name: firmware-${{ matrix.artifact }}
+          path: "*.bin"
+          if-no-files-found: error
+
+  release:
+    name: "Publish release"
+    needs: build
+    if: startsWith(github.ref, 'refs/tags/')
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Download firmwares
+        uses: actions/download-artifact@v4
+        with:
+          pattern: firmware-*
+          path: firmware
+          merge-multiple: true
+
+      - name: Create release or attach firmwares
+        env:
+          GH_TOKEN: ${{ github.token }}
+          GH_REPO: ${{ github.repository }}
+          TAG: ${{ github.ref_name }}
+        run: |
+          ls -l firmware
+          # A release created from the GitHub UI already exists: keep its notes and just attach the binaries
+          if gh release view "$TAG" > /dev/null 2>&1; then
+            gh release upload "$TAG" firmware/*.bin --clobber
+          else
+            gh release create "$TAG" firmware/*.bin \
+              --title "Nuphy custom firmware ${TAG#v}" \
+              --generate-notes
+          fi
