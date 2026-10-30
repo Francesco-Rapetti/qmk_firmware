@@ -26,6 +26,7 @@ DEV_INFO_STRUCT dev_info = {
     .rf_state   = RF_IDLE,
 };
 
+bool f_uart_ack        = 0;
 bool f_bat_hold        = 0;
 bool f_sys_show        = 0;
 bool f_sleep_show      = 0;
@@ -35,6 +36,13 @@ bool f_rf_sw_press     = 0;
 bool f_dev_reset_press = 0;
 bool f_rgb_test_press  = 0;
 bool f_bat_num_show    = 0;
+bool f_rf_hand_ok      = 0;
+bool f_goto_sleep      = 0;
+bool f_rf_read_data_ok = 0;
+bool f_rf_sts_sysc_ok  = 0;
+bool f_rf_new_adv_ok   = 0;
+bool f_rf_reset        = 0;
+bool f_wakeup_prepare  = 0;
 
 uint16_t       rf_linking_time       = 0;
 uint16_t       rf_link_show_time     = 0;
@@ -47,7 +55,6 @@ uint16_t       rgb_test_press_delay  = 0;
 uint8_t        host_mode             = 0;
 host_driver_t *m_host_driver         = 0;
 
-extern bool               f_rf_new_adv_ok;
 extern report_keyboard_t *keyboard_report;
 extern report_nkro_t *nkro_report;
 extern uint8_t            bitkb_report_buf[32];
