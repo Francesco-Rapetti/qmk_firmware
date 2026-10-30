@@ -20,8 +20,9 @@ env:
 jobs:
   build:
     name: "Compile ${{ matrix.keyboard }}"
-    runs-on: ubuntu-latest
-    container: ghcr.io/qmk/qmk_cli
+    # Toolchain and Python deps pinned to match the 2024 QMK base of this fork:
+    # the ghcr.io/qmk/qmk_cli:latest container is too new for it
+    runs-on: ubuntu-24.04
 
     strategy:
       fail-fast: false
@@ -35,18 +36,34 @@ jobs:
             artifact: kick75
 
     steps:
-      - name: Disable safe.directory check
-        run: |
-          git config --global --add safe.directory '*'
-
       - name: Checkout QMK Firmware
-        uses: actions/checkout@v4
+        uses: actions/checkout@v5
         with:
           submodules: recursive
 
-      - name: Compile firmware
+      - name: Setup Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      - name: Install toolchain
         run: |
-          qmk compile -kb ${{ matrix.keyboard }} -km ${{ env.KEYMAP }}
+          sudo apt-get update
+          sudo apt-get install -y gcc-arm-none-eabi binutils-arm-none-eabi libnewlib-arm-none-eabi
+          python3 -m pip install "qmk==1.1.5" "milc>=1.6.8,<1.9" -r requirements.txt
+          arm-none-eabi-gcc --version | head -n 1
+
+      - name: Compile firmware
+        shell: bash
+        run: |
+          if ! qmk compile -kb ${{ matrix.keyboard }} -km ${{ env.KEYMAP }} > build.log 2>&1; then
+            cat build.log
+            # Job logs need a GitHub login, annotations don't: show the tail of the error on the run page
+            msg=$(tail -n 40 build.log | sed 's/\x1b\[[0-9;]*m//g; s/%/%25/g; s/\r/%0D/g' | awk '{printf "%s%%0A", $0}')
+            echo "::error title=Compile ${{ matrix.keyboard }} failed::$msg"
+            exit 1
+          fi
+          cat build.log
 
       - name: Upload firmware
         uses: actions/upload-artifact@v4
