@@ -18,6 +18,7 @@ extern bool f_rf_new_adv_ok;
 extern bool f_rf_reset;
 extern bool f_rf_hand_ok;
 extern bool f_goto_sleep;
+extern bool f_bat_level_ok;
 
 uint8_t  uart_bit_report_buf[32] = {0};
 uint8_t  func_tab[32]            = {0};
@@ -246,8 +247,12 @@ void RF_Protocol_Receive(void) {
 
                     dev_info.rf_charge = Usart_Mgr.RXDBuf[7];
 
-                    if (Usart_Mgr.RXDBuf[8] <= 100) dev_info.rf_baterry = Usart_Mgr.RXDBuf[8];
-                    if (dev_info.rf_charge & 0x01) dev_info.rf_baterry = 100;
+                    // while charging (0x03) the module reports 1 instead of the level: keep the last one read on battery
+                    if (dev_info.rf_charge != 0x03 && Usart_Mgr.RXDBuf[8] <= 100) {
+                        dev_info.rf_baterry = Usart_Mgr.RXDBuf[8];
+                        f_bat_level_ok      = 1;
+                    }
+                    if ((dev_info.rf_charge & 0x01) && dev_info.rf_charge != 0x03) dev_info.rf_baterry = 100;
                 }
                 else {
                     if (dev_info.rf_state != RF_INVALID) {

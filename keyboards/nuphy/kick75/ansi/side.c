@@ -68,6 +68,7 @@ uint8_t r_temp, g_temp, b_temp;
 
 extern DEV_INFO_STRUCT dev_info;
 extern bool f_bat_hold;
+extern bool f_bat_level_ok;
 extern user_config_t user_config;
 extern uint8_t rf_blink_cnt;
 extern uint16_t rf_link_show_time;
@@ -659,6 +660,83 @@ void bat_led_show(void)
     }
 }
 
+/**
+ * @brief  battery percentage on number keys 1 .. 0, filling animation while charging.
+ */
+#define BAT_NUM_LED_START  15
+#define BAT_NUM_LED_COUNT  10
+#define BAT_NUM_FILL_STEP  150
+#define BAT_NUM_FILL_LIGHT 0x30
+
+// brightest first, bat_num_dim is the number of steps down
+const uint8_t bat_num_light_table[BAT_NUM_LIGHT_STEPS] = {0xff, 0xc0, 0x90, 0x60, 0x40, 0x20};
+uint8_t bat_num_dim = 0;
+
+/**
+ * @brief  Adjusting the brightness of the battery number keys.
+ * @param  brighten: 0 - decrease, 1 - increase.
+ * @note  save to eeprom.
+ */
+void bat_num_light_control(uint8_t brighten)
+{
+    if (brighten) {
+        if (bat_num_dim == 0) {
+            return;
+        } else
+            bat_num_dim--;
+    } else {
+        if (bat_num_dim == BAT_NUM_LIGHT_STEPS - 1) {
+            return;
+        } else
+            bat_num_dim++;
+    }
+    user_config.ee_bat_num_dim = bat_num_dim;
+    eeconfig_update_user_datablock(&user_config);
+}
+
+void bat_num_led_show(void)
+{
+    uint8_t bat_light[BAT_NUM_LED_COUNT] = {0};
+    uint8_t bat_percent = dev_info.rf_baterry;
+    bool    charging    = dev_info.rf_charge == 0x03;
+    uint8_t full_keys;
+
+    // booted on the cable: no level read yet, show only the charging fill
+    if (charging && !f_bat_level_ok) bat_percent = 0;
+    if (bat_percent > 100) bat_percent = 100;
+    full_keys = bat_percent / 10;
+
+    // every 10% lights one key, the remainder dims the next one
+    for (uint8_t i = 0; i < full_keys; i++)
+        bat_light[i] = 0xff;
+    if (full_keys < BAT_NUM_LED_COUNT)
+        bat_light[full_keys] = (bat_percent % 10) * 0xff / 10;
+
+    if (charging) {
+        if (full_keys < BAT_NUM_LED_COUNT) {
+            // fill the keys above the current level one by one, then start over
+            uint8_t fill_len  = BAT_NUM_LED_COUNT - full_keys;
+            uint8_t fill_step = (timer_read32() / BAT_NUM_FILL_STEP) % (fill_len + 2);
+            for (uint8_t i = full_keys; i < full_keys + fill_step && i < BAT_NUM_LED_COUNT; i++) {
+                if (bat_light[i] < BAT_NUM_FILL_LIGHT) bat_light[i] = BAT_NUM_FILL_LIGHT;
+            }
+        } else {
+            // already at 100%: breathe the whole row
+            uint8_t breath = breathe_data_tab[(timer_read32() / 10) % BREATHE_TAB_LEN];
+            for (uint8_t i = 0; i < BAT_NUM_LED_COUNT; i++)
+                bat_light[i] = 0x40 + (((uint16_t)breath * (0xff - 0x40)) >> 8);
+        }
+    }
+
+    for (uint8_t i = 0; i < BAT_NUM_LED_COUNT; i++) {
+        r_temp = 0x00;
+        g_temp = bat_light[i];
+        b_temp = 0x00;
+        count_rgb_light(bat_num_light_table[bat_num_dim]);
+        rgb_matrix_set_color(BAT_NUM_LED_START + i, r_temp, g_temp, b_temp);
+    }
+}
+
 
 /**
  * @brief  device_reset_show.
@@ -691,6 +769,7 @@ void device_reset_init(void)
     side_rgb        = 1;
     side_colour     = 0;
     side_play_point = 0;
+    bat_num_dim     = 0;
 
     side_play_cnt   = 0;
     side_play_timer = timer_read32();
@@ -709,6 +788,7 @@ void device_reset_init(void)
     user_config.ee_side_rgb             = side_rgb;
     user_config.ee_side_colour          = side_colour;
     user_config.sleep_enable            = true;
+    user_config.ee_bat_num_dim          = bat_num_dim;
     eeconfig_update_user_datablock(&user_config);
 }
 

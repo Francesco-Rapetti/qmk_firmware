@@ -53,6 +53,9 @@ bool f_rf_sw_press      = 0;
 bool f_dev_reset_press  = 0;
 bool f_rgb_test_press   = 0;
 bool f_bat_num_show     = 0;
+bool f_bat_num_hold     = 0;
+bool f_bat_num_adjust   = 0;
+bool f_bat_level_ok     = 0;
 
 uint8_t host_mode;
 host_driver_t *m_host_driver   = 0;
@@ -68,6 +71,7 @@ uint8_t rf_sw_temp             = 0;
 void rf_uart_init(void);
 void rf_device_init(void);
 void m_side_led_show(void);
+void bat_num_led_show(void);
 void dev_sts_sync(void);
 void uart_send_report_func(void);
 void uart_receive_pro(void);
@@ -84,6 +88,7 @@ extern uint8_t side_light;
 extern uint8_t side_speed;
 extern uint8_t side_rgb;
 extern uint8_t side_colour;
+extern uint8_t bat_num_dim;
 extern report_keyboard_t *keyboard_report;
 extern report_nkro_t *nkro_report;
 extern uint8_t uart_bit_report_buf[32];
@@ -93,6 +98,7 @@ extern uint8_t bytekb_report_buf[8];
 extern void eeconfig_update_user_datablock(const void *data);
 extern void light_speed_control(uint8_t fast);
 extern void light_level_control(uint8_t brighten);
+extern void bat_num_light_control(uint8_t brighten);
 extern void side_colour_control(uint8_t dir);
 extern void side_mode_control(uint8_t dir);
 extern void num_led_show(void);
@@ -641,6 +647,26 @@ bool process_record_kb(uint16_t keycode, keyrecord_t *record) {
             }
             return false;
 
+        case BAT_NUM:
+            // tap toggles the battery keys, hold + up/down sets their brightness
+            if (record->event.pressed) {
+                f_bat_num_hold   = 1;
+                f_bat_num_adjust = 0;
+            } else {
+                f_bat_num_hold = 0;
+                if (!f_bat_num_adjust) f_bat_num_show = !f_bat_num_show;
+            }
+            return false;
+
+        case RGB_VAI:
+        case RGB_VAD:
+            if (!f_bat_num_hold) return true;
+            if (record->event.pressed) {
+                bat_num_light_control(keycode == RGB_VAI);
+                f_bat_num_adjust = 1;
+            }
+            return false;
+
         case RGB_TEST:
             if (record->event.pressed) {
                 f_rgb_test_press = 1;
@@ -703,6 +729,7 @@ void m_londing_eeprom_data(void)
         user_config.ee_side_rgb             = side_rgb;
         user_config.ee_side_colour          = side_colour;
         user_config.sleep_enable            = true;
+        user_config.ee_bat_num_dim          = bat_num_dim;
         eeconfig_update_user_datablock(&user_config);
     } else {
         side_mode   = user_config.ee_side_mode;
@@ -710,6 +737,8 @@ void m_londing_eeprom_data(void)
         side_speed  = user_config.ee_side_speed;
         side_rgb    = user_config.ee_side_rgb;
         side_colour = user_config.ee_side_colour;
+        bat_num_dim = user_config.ee_bat_num_dim;
+        if (bat_num_dim >= BAT_NUM_LIGHT_STEPS) bat_num_dim = 0;
     }
 }
 
@@ -852,6 +881,11 @@ bool rgb_matrix_indicators_kb(void)
             break;
         default:
             break;
+    }
+
+    // battery on number keys, drawn over the fn layer link indicators
+    if (f_bat_num_show || f_bat_num_hold) {
+        bat_num_led_show();
     }
 
     // set rgb color according to the current device connected

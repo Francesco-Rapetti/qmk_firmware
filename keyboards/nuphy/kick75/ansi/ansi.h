@@ -48,6 +48,8 @@ enum custom_keycodes {
     SIDE_HUI,
     SIDE_SPI,
     SIDE_SPD,
+
+    BAT_NUM,
 };
 
 
@@ -166,5 +168,7 @@ typedef struct
     uint8_t ee_side_rgb;
     uint8_t ee_side_colour;
     uint8_t sleep_enable;
-    uint8_t retain2;
+    uint8_t ee_bat_num_dim;
 } user_config_t;
+
+#define BAT_NUM_LIGHT_STEPS 6
